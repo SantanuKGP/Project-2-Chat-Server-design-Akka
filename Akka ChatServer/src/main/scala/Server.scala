@@ -43,7 +43,7 @@ class Server (port : Int){
             println(statusMessage)
             deleteUser(username)
             println("Total users now : " + mapOfOutputStream.keys.toList.length + ", IP Users Created: "+ ip_users)
-            for(i <- mapOfOutputStream.keys) mapOfOutputStream(i).writeUTF("Server"+":::all:::"+statusMessage)
+            mapOfOutputStream.keys.foreach(i => mapOfOutputStream(i).writeUTF("Server"+":::all:::"+statusMessage))
           }
           catch{
             case _: Throwable => println("Logging out error!")
