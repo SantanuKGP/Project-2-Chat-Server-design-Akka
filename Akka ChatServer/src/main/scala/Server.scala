@@ -51,7 +51,7 @@ class Server (port : Int){
           Behaviors.same
 
         case BroadCastMessage(text) =>
-          for(i <- actorRefs.keys) actorRefs(i) ! text
+          actorRefs.keys.foreach(i => actorRefs(i) ! text)
           Behaviors.same
 
         case _ =>
