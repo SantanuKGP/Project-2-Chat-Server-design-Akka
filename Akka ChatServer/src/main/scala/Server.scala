@@ -33,7 +33,6 @@ class Server (port : Int){
           val childRef = context.spawn(messageAdmin(context.self,inputStream),s"$username")
           val statusMessage = s"$username has joined the chat"
           println(statusMessage)
-          //          context.self ! BroadCastMessage(Broadcast(statusMessage,"ServerBot"))
           childRef ! Broadcast(statusMessage,"Server")
           actorRefs += (username -> childRef)
           Behaviors.same
@@ -127,7 +126,13 @@ class Server (port : Int){
         val input = new DataInputStream(socket.getInputStream)
         val output = new DataOutputStream(socket.getOutputStream)
 
-        val username = input.readUTF()
+        var user = input.readUTF()
+        while(mapOfOutputStream.contains(user)){
+          output.writeUTF("Not Ok")
+          user = input.readUTF()
+        }
+        output.writeUTF("Ok")
+        val username = user
         println(s"$username joined ")
         ip_users += 1
 

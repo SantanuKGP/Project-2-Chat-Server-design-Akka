@@ -6,15 +6,14 @@ import java.net.{Socket, UnknownHostException}
 import scala.io.StdIn.readLine
 
 
-class Client (user:String,address : String, port : Int) {
+class Client (var user:String,address : String, port : Int) {
 
   trait ClientProtocol
   case object ReadMessage extends ClientProtocol
   case object WriteMessage extends ClientProtocol
-
   trait ClientAdminProtocol
+
   case object Start extends ClientAdminProtocol
-  case object Stop extends ClientAdminProtocol
 
   private var socket: Socket = _
   private var input: DataInputStream = _
@@ -31,6 +30,13 @@ class Client (user:String,address : String, port : Int) {
       output = new DataOutputStream(socket.getOutputStream)
 
       output.writeUTF(user)
+      var isUniqueUsername = input.readUTF()
+      while(isUniqueUsername!="Ok"){
+        println(s"Give unique username. $user exists already.")
+        this.user = readLine()
+        output.writeUTF(user)
+        isUniqueUsername = input.readUTF()
+      }
       println(input.readUTF()) // Passcode
       print("Enter the passcode : ")
       output.writeUTF(readLine())
@@ -44,15 +50,17 @@ class Client (user:String,address : String, port : Int) {
       }
       else {
         println("Are you a bot?")
+        output.close()
+        input.close()
+        socket.close()
+        client.terminate()
       }
     }
     catch {
-      case t: UnknownHostException => println(t)
-      case i: IOException => println(i)
-      case e: NullPointerException => println(e)
+      case t: UnknownHostException => println(t) ;client.terminate()
+      case i: IOException => println(i) ;client.terminate()
+      case e: NullPointerException => println(e) ;client.terminate()
     }
-    client.terminate()
-
   }
   object ClientReader {
     def apply(): Behavior[ClientProtocol] = Behaviors.receive { (context, message) =>
@@ -87,7 +95,6 @@ class Client (user:String,address : String, port : Int) {
           val reader = new BufferedReader(new InputStreamReader(System.in))
           if(reader.ready() && flag){
             val line = reader.readLine()
-            println(line)
             output.writeUTF(line)
             if(isOpen(line)) {
               context.self ! WriteMessage
