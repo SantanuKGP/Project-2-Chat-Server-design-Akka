@@ -9,16 +9,11 @@ import scala.io.StdIn.readLine
 class Client (user:String,address : String, port : Int) {
 
   trait ClientProtocol
-
   case object ReadMessage extends ClientProtocol
-
   case object WriteMessage extends ClientProtocol
 
-  //  case object StopWrite extends ClientProtocol
   trait ClientAdminProtocol
-
   case object Start extends ClientAdminProtocol
-
   case object Stop extends ClientAdminProtocol
 
   private var socket: Socket = _
@@ -49,8 +44,6 @@ class Client (user:String,address : String, port : Int) {
       }
       else {
         println("Are you a bot?")
-        //      output.writeUTF("close")
-
       }
     }
     catch {

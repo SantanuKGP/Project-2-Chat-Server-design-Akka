@@ -45,17 +45,6 @@ class Server (port : Int){
             deleteUser(username)
             println("Total users now : " + mapOfOutputStream.keys.toList.length + ", IP Users Created: "+ ip_users)
             for(i <- mapOfOutputStream.keys) mapOfOutputStream(i).writeUTF("Server"+":::all:::"+statusMessage)
-            //            val statusMessage = s"$username has left the chat"
-            //            println(statusMessage)
-            //            mapOfOutputStream(username).close()
-            //            mapOfInputStream(username).close()
-            //            socketMap(username).close()
-            //            mapOfOutputStream -= username
-            //            mapOfInputStream -= username
-            //            actorRefs -=username
-            //            socketMap -= username
-            //            println("Total users now : " + mapOfOutputStream.keys.toList.length + ", IP Users Created: "+ ip_users)
-            //            for(i <- mapOfOutputStream.keys) mapOfOutputStream(i).writeUTF("Server"+":::all:::"+statusMessage)
           }
           catch{
             case _: Throwable => println("Logging out error!")
@@ -178,12 +167,6 @@ class Server (port : Int){
     }
 
   }
-
-
-
-
-
-
 
 
   private def deleteUser(username: String):Unit={
